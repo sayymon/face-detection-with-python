@@ -19,5 +19,8 @@ Aplicações :
 - Desbloqueio de Celulares 
 - Chamada Eletronica (Virtual ou presencial)
 
+# Principais Libs para deteccção e reconhecimento de imagens : 
+
+[OpenCV](./OpenCV.md) e [Dlib](./Dlib.md)
 
 
