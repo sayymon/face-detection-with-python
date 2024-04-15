@@ -23,4 +23,12 @@ Aplicações :
 
 [OpenCV](./OpenCV.md) e [Dlib](./Dlib.md)
 
+# Imagens
+
+Curiosidades sobre imagens, toda imagem nada mais é do que uma cadeia de pixels
+
+Cada pixel é representado pela escala RGB de 0 a 255. 
+
+Imagens em escala cinza possuem sempre o mesmo valor no R G e B independente, sendo assim ocupam menos espaço e ajudam aos algoritimos de detecção e reconhecimento serem mais performaticos.
+
 
