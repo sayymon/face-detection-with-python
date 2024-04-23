@@ -47,3 +47,22 @@ E depois obter as detecções conforme abaixo :
 deteccoes = detector_facial.detectMultiScale(imagem_cinza)
 ```
 
+Redimencionar a imagem ajuda na detecção, se tiver com escala baixxa pode não identificar corretamente , mas se estiver com proporções muito grandes pode detectar faces alem do esperado como em camisetas fundo entre outros.
+
+Para ajustar a escala de forma util podemos usar a função resize Ex : 
+
+```
+imagem = cv2.imread('/content/family_kgns.jpeg')
+imagem = cv2.resize(imagem, (0,0), fx = 0.6, fy = 0.6)
+imagem.shape
+```
+
+A função retangle ajuda a marcar a imagem com as faces detectadas ex : 
+
+```
+imagem_cinza = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)
+deteccoes = detector_facial.detectMultiScale(imagem_cinza)
+for (x, y, w, h) in deteccoes:
+  cv2.rectangle(imagem, (x, y), (x + w, y + h), (100,255,255), 3)
+cv2_imshow(imagem)
+```
