@@ -31,4 +31,19 @@ Cada pixel é representado pela escala RGB de 0 a 255.
 
 Imagens em escala cinza possuem sempre o mesmo valor no R G e B independente, sendo assim ocupam menos espaço e ajudam aos algoritimos de detecção e reconhecimento serem mais performaticos.
 
+Existe um xml do haarcascade que por default consegue detectar faces.
+
+[haarcascade_frontalface_default.xml](./haarcascade_frontalface_default.xml)
+
+basta instanciar ele assim : 
+
+```
+detector_facial = cv2.CascadeClassifier('/content/haarcascade_frontalface_default.xml')
+```
+
+E depois obter as detecções conforme abaixo : 
+
+```
+deteccoes = detector_facial.detectMultiScale(imagem_cinza)
+```
 
