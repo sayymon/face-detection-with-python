@@ -87,3 +87,12 @@ for face in deteccoes:
   cv2.rectangle(imagem, (l, t), (r, b), (0,255,255), 2)
 cv2_imshow(imagem)
 ```
+
+Upsampling é um técnica de processamento digital de sinais para aumentar artificialmente a taxa de amostragem em N vezes, inserindo um número N-1 de zeros entre as amostras originais do sinal, e passando o conjunto obtido por um filtro de reconstrução, que nada mais é que um filtro do tipo passa-baixas
+
+Podemos trabalhar esse parametro para dar foco em faces, redimencionando para ter melhor precisão na deteccão Ex : 
+
+```
+deteccoes = detector_face_hog(imagem, 2)
+```
+
