@@ -124,3 +124,73 @@ for face in deteccoes:
   cv2.rectangle(imagem, (l, t), (r, b), (255,255,0), 2)
 cv2_imshow(imagem)
 ```
+
+## OpenCV - SSD: Single Shot Multibox Detector
+
+É uma evolução dos Algoritmos anteriores e possui mais precisão e até desempenho consideranto tarefas complexas de detecção.
+
+Usa rede neural artificial, tambem correlacionada a Multibox  fazendo regressão para gerar bounding boxes automaticos
+
+Podemos utilizar modelos treinados pelos TensowFlor pe Pytork ou pelo Caffe conforme exemplo abaixo : 
+
+```
+arquivo_modelo = '/content/res10_300x300_ssd_iter_140000.caffemodel'
+arquivo_prototxt = '/content/deploy.prototxt.txt'
+network = cv2.dnn.readNetFromCaffe(arquivo_prototxt, arquivo_modelo)
+conf_min = 0.5
+imagem = cv2.imread('/content/people2.jpg')
+imagem.shape
+(h, w) = imagem.shape[:2]
+print(h, w)
+cv2_imshow(imagem)
+# Documentation: https://docs.opencv.org/3.4/d6/d0f/group__dnn.html
+blob = cv2.dnn.blobFromImage(cv2.resize(imagem, (300,300)), 1.0, (300,300), (104.0, 117.0, 123.0))
+
+network.setInput(blob) # Envio a imagem para a rede neural
+deteccoes = network.forward() # Faz a rede neural percorrer as camadas para retornar as detecções
+
+for i in range(0, deteccoes.shape[2]):
+  confianca = deteccoes[0, 0, i, 2]
+  if confianca > conf_min:
+    #print(confianca)
+    text_conf = "{:.2f}%".format(confianca * 100)
+    box = deteccoes[0, 0, i, 3:7] * np.array([w, h, w, h])
+    #print(box)
+    (start_x, start_y, end_x, end_y) = box.astype(int)
+    #print(start_x, start_y, end_x, end_y)
+    cv2.rectangle(imagem, (start_x, start_y), (end_x, end_y), (0,255,0), 2)
+    cv2.putText(imagem, text_conf, (start_x, start_y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 2)
+cv2_imshow(imagem)
+```
+
+É um pouco mais complexo mas é muito mais preciso
+
+Aumentando o tamanho da imagem a confiança fica melhor : 
+
+Ex : 
+
+```
+path_imagem = '/content/people3.jpg'
+detecta_face_ssd(network, path_imagem, 500)
+
+
+def detecta_face_ssd(net, path_imagem, tamanho = 300):
+  imagem = cv2.imread(path_imagem)
+  (h, w) = imagem.shape[:2]
+  blob = cv2.dnn.blobFromImage(cv2.resize(imagem, (tamanho, tamanho)), 2.0, (tamanho, tamanho), (104.0, 117.0, 123.0))
+  net.setInput(blob)
+  deteccoes = net.forward()
+
+  for i in range(0, deteccoes.shape[2]):
+    confianca = deteccoes[0, 0, i, 2]
+
+    if confianca > conf_min:
+      box = deteccoes[0, 0, i, 3:7] * np.array([w, h, w, h])
+      (start_x, start_y, end_x, end_y) = box.astype("int")
+
+      text_conf = "{:.2f}%".format(confianca * 100)
+      cv2.rectangle(imagem, (start_x, start_y), (end_x, end_y), (0, 255, 0), 2)
+      cv2.putText(imagem, text_conf, (start_x, start_y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 0), 2)
+
+  cv2_imshow(imagem)
+```
