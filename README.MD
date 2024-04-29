@@ -66,3 +66,24 @@ for (x, y, w, h) in deteccoes:
   cv2.rectangle(imagem, (x, y), (x + w, y + h), (100,255,255), 3)
 cv2_imshow(imagem)
 ```
+
+# Hog - Histogram of Oriented Gradient
+
+É um algoritmo que trabalha com os histpgramas para conseguir identificar objetos e partes do corpo por exemplo usando indicadores , possui uma precisão melhor do que o Haarcascade.
+
+usa a Dlib e não precisa converter em escala de cinza pq inclusive utiliza as cores
+
+Podemos usar o : 
+```
+detector_face_hog = dlib.get_frontal_face_detector()
+```
+Para detectar rostos conforme abaixo : 
+
+```
+imagem = cv2.imread('/content/people2.jpg')
+deteccoes = detector_face_hog(imagem)
+for face in deteccoes:
+  l, t, r, b = face.left(), face.top(), face.right(), face.bottom()
+  cv2.rectangle(imagem, (l, t), (r, b), (0,255,255), 2)
+cv2_imshow(imagem)
+```
