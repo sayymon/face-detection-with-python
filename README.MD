@@ -96,3 +96,31 @@ Podemos trabalhar esse parametro para dar foco em faces, redimencionando para te
 deteccoes = detector_face_hog(imagem, 2)
 ```
 
+## MMOD - Max Margin Object Detection
+Tecnica de tetecção de objetos através da margem
+Da area de Deep Learning precisa de GPU pois demanda processamento alto de maquina
+
+Este detecta faces em todos os angulos, que não estão em posições frontal
+
+Pois usa algoritimos redes neurais convolucionais
+
+### Uma Rede Neural Convolucional (ConvNet / Convolutional Neural Network / CNN) 
+
+É um algoritmo de Aprendizado Profundo que pode captar uma imagem de entrada, atribuir importância (pesos e vieses que podem ser aprendidos) a vários aspectos / objetos da imagem e ser capaz de diferenciar um do outro.
+
+
+Esse Detector retorna alem das detecções de forma mais precisa em em varios angulos, mas tambem o nivel de confiança na variavel `face.confidence`., conforme exemplo abaixo : 
+
+```
+imagem = cv2.imread('/content/people1.jpg')
+imagem = cv2.resize(imagem, (600, 400))
+detector_cnn_mmod = dlib.cnn_face_detection_model_v1('/content/mmod_human_face_detector.dat')
+
+deteccoes = detector_cnn_mmod(imagem, 1)
+for face in deteccoes:
+  #print(face)
+  l, t, r, b, c = face.rect.left(), face.rect.top(), face.rect.right(), face.rect.bottom(), face.confidence
+  print(c)
+  cv2.rectangle(imagem, (l, t), (r, b), (255,255,0), 2)
+cv2_imshow(imagem)
+```
