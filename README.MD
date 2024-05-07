@@ -218,4 +218,63 @@ fps = 24 ## podemos reconfigurar para o video ficar mais rapido ou mais lento
 video_saida = cv2.VideoWriter(arquivo_resultado, fourcc, fps, (video_largura, video_altura))
 ```
 
+Comando util para converter o video de avi para mp4
 
+```
+!ffmpeg -y -loglevel panic -i resultado.avi resultado.mp4
+```
+
+
+Com deep learning é muito melhor os resultados de deteccçoes do que o haarcascade Exemplo de implementação
+
+```
+network = cv2.dnn.readNetFromCaffe("deploy.prototxt.txt", "res10_300x300_ssd_iter_140000.caffemodel")
+
+def detecta_face_ssd(net, imagem, show_conf=True, tamanho = 300, conf_min = 0.7):
+  (h, w) = imagem.shape[:2]
+  blob = cv2.dnn.blobFromImage(cv2.resize(imagem, (tamanho, tamanho)), 1.0, (tamanho, tamanho), (104.0, 117.0, 123.0))
+  net.setInput(blob)
+  deteccoes = net.forward()
+
+  face = None
+  for i in range(0, deteccoes.shape[2]):
+    confianca = deteccoes[0, 0, i, 2]
+    if confianca > conf_min:
+      box = deteccoes[0, 0, i, 3:7] * np.array([w, h, w, h])
+      (start_x, start_y, end_x, end_y) = box.astype("int")
+  
+      cv2.rectangle(imagem, (start_x, start_y), (end_x, end_y), (0, 255, 0), 2)
+      if show_conf:
+        text_conf = "{:.2f}%".format(confianca * 100)
+        cv2.putText(imagem, text_conf, (start_x, start_y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 0), 2)
+
+  return imagem
+
+while cv2.waitKey(1) < 0:
+  conectado, frame = cap.read()
+  if not conectado:
+    break
+  if max_frames > -1 and frame_atual > max_frames:
+    break
+  (H, W) = frame.shape[:2]
+  t = time.time()
+  if largura_maxima is not None:
+    frame = cv2.resize(frame, (video_largura, video_altura))
+  frame_processado = detecta_face_ssd(network, frame, True, 500)
+  cv2.putText(frame, " frame processado em {:.2f} segundos".format(time.time() - t), (20, video_altura - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (250,250,250), 0, lineType = cv2.LINE_AA)
+  video_saida.write(frame_processado)
+  if frame_atual <= frames_show:
+    cv2_imshow(cv2.resize(frame_processado, (0,0), fx = 0.75, fy = 0.75))
+  frame_atual += 1
+
+print('Terminou!')
+video_saida.release()
+cv2.destroyAllWindows()
+
+!ffmpeg -y -loglevel panic -i resultado.avi resultado.mp4
+
+show_video('resultado.mp4')
+
+```
+
+Com isso é possivel ver o seu video com as respectivas deteccções
