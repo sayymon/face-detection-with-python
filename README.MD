@@ -194,3 +194,28 @@ def detecta_face_ssd(net, path_imagem, tamanho = 300):
 
   cv2_imshow(imagem)
 ```
+
+## Detecção em Videos
+
+Podemos utilizar a lib cv2
+
+Ex : 
+
+```
+arquivo_video = '/content/gabydancandocommusica.mp4'
+cap = cv2.VideoCapture(arquivo_video)
+
+conectado, video = cap.read()
+print(conectado)
+
+```
+
+Podemos regravar o video com os bounded Box : 
+
+```
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+fps = 24 ## podemos reconfigurar para o video ficar mais rapido ou mais lento
+video_saida = cv2.VideoWriter(arquivo_resultado, fourcc, fps, (video_largura, video_altura))
+```
+
+
